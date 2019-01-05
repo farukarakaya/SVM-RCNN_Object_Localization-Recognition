@@ -4,6 +4,7 @@ from skimage import color
 import os, glob
 import resnet
 import torch
+import pickle
 
 path = os.getcwd()
 train_data_path = path + "/data/train"
@@ -26,11 +27,9 @@ def normalize(image_file):
     if shape[2] == 4: # if image has alpha channel
         img =  color.rgba2rgb(img) #convert to the rgb
     padded = np.array(img)
-    print(padded.shape)
     if height < width:
         diff = width - height
         padded = np.pad(padded,((diff//2, diff- diff//2),(0,0),(0,0)),mode='constant')
-        print(padded.shape)
     elif height > width:
         diff = height - width
         padded = np.pad(padded, ((0,0),(diff // 2, diff - diff // 2),(0,0)), mode='constant')
@@ -58,8 +57,17 @@ def extract_feature(image):
 def get_all_features_by_labels():
     all_images = load_all_images()
     padded_img_vectors_by_label = {}
-    for i,label in labels:
+    count = 0
+    for label in labels:
         padded_img_vectors_by_label[label] = []
         for img_path in all_images[label]:
-            padded_img_vectors_by_label.append(extract_feature(normalize(img_path)))
-    return padded_img_vectors_by_label
+            padded_img_vectors_by_label[label].append(extract_feature(normalize(img_path)))
+            count += 1
+            print(count)
+
+    outfile = open('training_features.pickle', 'wb')
+    pickle.dump(padded_img_vectors_by_label, outfile)
+
+a = get_all_features_by_labels()
+b = a
+pass
