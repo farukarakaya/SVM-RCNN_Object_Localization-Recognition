@@ -5,6 +5,7 @@ import os, glob
 import resnet
 import torch
 import pickle
+from sklearn import preprocessing as p
 
 path = os.getcwd()
 train_data_path = path + "/data/train"
@@ -16,7 +17,7 @@ labels = ['n01615121', 'n02099601', 'n02123159',
 def load_all_images():
     images = {}
     for label in labels:
-        images[label] = glob.glob(train_data_path + '/**/*.JPEG', recursive=True)
+        images[label] = glob.glob(train_data_path + '/' + label + '/*.JPEG', recursive=True)
     return images
 
 
@@ -33,7 +34,8 @@ def normalize(image_file):
     elif height > width:
         diff = height - width
         padded = np.pad(padded, ((0,0),(diff // 2, diff - diff // 2),(0,0)), mode='constant')
-    padded.resize(224,224,3)
+    padded.resize(224, 224, 3, refcheck=False)
+
     return padded
 
 
@@ -49,24 +51,28 @@ def extract_feature(image):
     model = resnet.resnet50(pretrained=True)
     feature_vector = model.forward(image)
     # convert the features of type torch.FloatTensor to a Numpy array
-    # so that you can either work with them within the sklearn environment
+    # so that you can either work with them within"rb" the sklearn environment
     # or save them as .mat files
     feature_vector = feature_vector.detach().numpy()
-    return feature_vector
+
+    # return normalized vector
+    return feature_vector[0]
 
 def get_all_features_by_labels():
     all_images = load_all_images()
-    padded_img_vectors_by_label = {}
+    padded_img_vectors = []
+    labels_of_vector = []
     count = 0
-    for label in labels:
-        padded_img_vectors_by_label[label] = []
+    for i,label in enumerate(labels):
         for img_path in all_images[label]:
-            padded_img_vectors_by_label[label].append(extract_feature(normalize(img_path)))
+            feature = extract_feature(normalize(img_path))
+            padded_img_vectors.append(feature)
+            labels_of_vector.append(i)
             count += 1
             print(count)
 
-    outfile = open('training_features.pickle', 'wb')
-    pickle.dump(padded_img_vectors_by_label, outfile)
+    pickle.dump(padded_img_vectors, open('training_features.pickle', 'wb'))
+    pickle.dump(labels_of_vector, open('training_labels.pickle', 'wb'))
 
 a = get_all_features_by_labels()
 b = a
