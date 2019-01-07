@@ -5,7 +5,6 @@ import os, glob
 import resnet
 import torch
 import pickle
-from sklearn import preprocessing as p
 
 path = os.getcwd()
 train_data_path = path + "/data/train"
