@@ -20,8 +20,7 @@ def load_all_images():
     return images
 
 
-def normalize(image_file):
-    img = imio.imread(image_file) # load the image
+def normalize(img):
     shape = img.shape
     height, width = shape[0], shape[1]
     if shape[2] == 4: # if image has alpha channel
@@ -64,7 +63,8 @@ def get_all_features_by_labels():
     count = 0
     for i,label in enumerate(labels):
         for img_path in all_images[label]:
-            feature = extract_feature(normalize(img_path))
+            img = imio.imread(img_path)  # load the image
+            feature = extract_feature(normalize(img))
             padded_img_vectors.append(feature)
             labels_of_vector.append(i)
             count += 1
@@ -73,6 +73,5 @@ def get_all_features_by_labels():
     pickle.dump(padded_img_vectors, open('training_features.pickle', 'wb'))
     pickle.dump(labels_of_vector, open('training_labels.pickle', 'wb'))
 
-a = get_all_features_by_labels()
-b = a
-pass
+#a = get_all_features_by_labels()
+#b = a
