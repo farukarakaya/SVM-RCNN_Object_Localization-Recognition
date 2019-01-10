@@ -14,7 +14,7 @@ def train_classfier():
     all_features = np.asarray(all_features)
     all_features.reshape(1,-1)
 
-    model = svm.LinearSVC()
+    model = svm.SVC(kernel= 'linear', gamma='scale', decision_function_shape='ovr')
     model.fit(all_features, all_labels)
     global_model = model
 
@@ -36,10 +36,11 @@ def confidence_score(feature):
 
     return global_model.decision_function([feature])
 
-#train_classfier()
-#all_features = pickle.load(open('training_features.pickle', "rb"))
-#labels = pickle.load(open('training_labels.pickle', "rb"))
+'''
+train_classfier()
+all_features = pickle.load(open('training_features.pickle', "rb"))
+labels = pickle.load(open('training_labels.pickle', "rb"))
 
-#for i,feature in enumerate(all_features):
-#    print(str(labels[i]) + ' -> ' + str(confidence_score(feature)))
-
+for i,feature in enumerate(all_features):
+    print(str(labels[i]) + ' -> ' + str(confidence_score(feature)))
+'''

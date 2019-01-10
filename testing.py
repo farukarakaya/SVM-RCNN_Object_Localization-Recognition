@@ -3,6 +3,7 @@ from classification import classify_image, labels
 from preproc import path
 import cv2
 import glob
+
 def classification_accuracy():
     y_true = [] #true labels
     with open('data/test/bounding_box.txt', 'r') as file:
