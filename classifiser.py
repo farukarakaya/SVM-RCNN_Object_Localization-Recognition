@@ -14,7 +14,7 @@ def train_classfier():
     all_features = np.asarray(all_features)
     all_features.reshape(1,-1)
 
-    model = svm.SVC(kernel= 'linear', gamma='scale', decision_function_shape='ovr')
+    model = svm.SVC(C =1500, gamma= "scale", decision_function_shape='ovo') #LinearSVC(multi_class='crammer_singer')  #
     model.fit(all_features, all_labels)
     global_model = model
 
@@ -26,6 +26,7 @@ def make_prediction(feature):
     if global_model == None:
         global_model = pickle.load(open('model.pickle', "rb"))
 
+    global_model.decision_function_shape = "ovr"
     return global_model.predict([feature])
 
 
@@ -34,7 +35,9 @@ def confidence_score(feature):
     if global_model == None:
         global_model = pickle.load(open('model.pickle', "rb"))
 
+    global_model.decision_function_shape = "ovr"
     return global_model.decision_function([feature])
+
 
 '''
 train_classfier()
@@ -42,5 +45,5 @@ all_features = pickle.load(open('training_features.pickle', "rb"))
 labels = pickle.load(open('training_labels.pickle', "rb"))
 
 for i,feature in enumerate(all_features):
-    print(str(labels[i]) + ' -> ' + str(confidence_score(feature)))
+    print(str(labels[i]) + ' -> ' + str(make_prediction(feature)))
 '''

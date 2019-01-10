@@ -1,6 +1,7 @@
 import numpy as np
 import skimage.io as imio
 from skimage import color
+from sklearn import preprocessing
 import os, glob
 import resnet
 import torch
@@ -52,9 +53,10 @@ def extract_feature(image):
     # so that you can either work with them within"rb" the sklearn environment
     # or save them as .mat files
     feature_vector = feature_vector.detach().numpy()
-
+    feature_vector.reshape(1, -1)
+    normalized = preprocessing.normalize([feature_vector[0]], norm='l2')
     # return normalized vector
-    return feature_vector[0]
+    return normalized[0]
 
 def get_all_features_by_labels():
     all_images = load_all_images()
