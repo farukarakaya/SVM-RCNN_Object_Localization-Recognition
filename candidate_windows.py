@@ -11,7 +11,7 @@ def get_edge_boxes(image, size):
     orimap = edge_detection.computeOrientation(edges)
     edges = edge_detection.edgesNms(edges, orimap)
 
-    edge_boxes = cv2.ximgproc.createEdgeBoxes()
+    edge_boxes = cv2.ximgproc.createEdgeBoxes(minBoxArea=25000)
     edge_boxes.setMaxBoxes(size)
     boxes = edge_boxes.getBoundingBoxes(edges, orimap)
 

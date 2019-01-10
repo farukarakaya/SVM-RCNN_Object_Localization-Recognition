@@ -13,7 +13,7 @@ def train_classfier():
     all_features = np.asarray(all_features)
     all_features.reshape(1,-1)
 
-    model = svm.SVC(C =2, gamma= 2, decision_function_shape='ovo') #LinearSVC(max_iter= 10000, C=1, multi_class='crammer_singer') #
+    model = svm.LinearSVC(max_iter=1000, multi_class='crammer_singer') #SVC(C =1000, gamma= 1, decision_function_shape='ovo')
     model.fit(all_features, all_labels)
     global_model = model
 
@@ -73,8 +73,6 @@ def plot_contours(ax, clf, xx, yy, **params):
     Z = Z.reshape(xx.shape)
     out = ax.contourf(xx, yy, Z, **params)
     return out
-
-
 
 '''
 train_classfier()
