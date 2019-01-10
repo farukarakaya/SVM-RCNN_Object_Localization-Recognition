@@ -17,7 +17,7 @@ labels = ['n01615121', 'n02099601', 'n02123159',
 def load_all_images():
     images = {}
     for label in labels:
-        images[label] = glob.glob(train_data_path + '/' + label + '/*.JPEG', recursive=True)
+        images[label] = glob.glob(train_data_path + '/' + label + '/*.JPEG', recursive=True)[:35]
     return images
 
 

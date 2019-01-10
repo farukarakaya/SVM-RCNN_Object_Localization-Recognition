@@ -28,7 +28,7 @@ def compute_accuracy():
             #classification
             y_predicted.append(cur_label)
             is_classified_true.append(cur_label.__eq__(y_true[i]))
-            print(i, cur_label, test_images_path + '/' + str(i) +'.JPEG')
+            print(i, y_true[i] == cur_label, y_true[i], cur_label, test_images_path + '/' + str(i) +'.JPEG')
             #localization
             x, y, w, h = cur_window
 
